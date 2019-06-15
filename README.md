@@ -11,13 +11,13 @@ typedef NS_ENUM(NSUInteger, EasyPermissionPrivacyType) {
     EasyPermissionPrivacyTypeLocationAlways,
     EasyPermissionPrivacyTypeLocationWhenInUse,
     EasyPermissionPrivacyTypeLocationAlwaysAndWhenInUse,
-    EasyPermissionPrivacyTypeContacts,
+    EasyPermissionPrivacyTypeContacts NS_ENUM_AVAILABLE_IOS(9_0),
     EasyPermissionPrivacyTypeReminders,
     EasyPermissionPrivacyTypeCalendars,
-    EasyPermissionPrivacyTypeSiri,
-    EasyPermissionPrivacyTypeSpeechRecognition,
-    EasyPermissionPrivacyTypeMusic,
-    EasyPermissionPrivacyTypeMotion,
+    EasyPermissionPrivacyTypeSiri NS_ENUM_AVAILABLE_IOS(10_0),
+    EasyPermissionPrivacyTypeSpeechRecognition NS_ENUM_AVAILABLE_IOS(10_0),
+    EasyPermissionPrivacyTypeMusic NS_ENUM_AVAILABLE_IOS(9_3),
+    EasyPermissionPrivacyTypeMotion NS_ENUM_AVAILABLE_IOS(11_0),
     EasyPermissionPrivacyTypeBluetooth
 };
 ```
@@ -34,8 +34,9 @@ typedef NS_ENUM(NSUInteger, EasyPermissionAuthorizationStatus) {
 
 ## use methods
 ``` objc 
-+ (void)authorizationRequestWithPrivacyType:(EasyPermissionPrivacyType)privacyType handler:(void (^)(EasyPermissionAuthorizationStatus status))handler;
++ (void)authorizationRequestWithPrivacyType:(EasyPermissionPrivacyType)privacyType
+                          completionHandler:(void (^)(EasyPermissionAuthorizationStatus status))handler;
 
-+ (EasyPermissionAuthorizationStatus)getAuthorizationStatusWithPrivacyType:(EasyPermissionPrivacyType)privacyType;
++ (EasyPermissionAuthorizationStatus)getAuthorizationStatusWithPrivacyType:(EasyPermissionPrivacyType)type;
 
 ```

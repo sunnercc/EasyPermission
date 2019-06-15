@@ -67,7 +67,11 @@ typedef NS_ENUM(NSUInteger, EPLocationType) {
             [_mgr requestWhenInUseAuthorization];
             break;
         case EPLocationTypeAlwaysAndWhenInUse:
-            _mgr.allowsBackgroundLocationUpdates = true;
+            if (@available(iOS 9.0, *)) {
+                _mgr.allowsBackgroundLocationUpdates = true;
+            } else {
+                // Fallback on earlier versions
+            }
             [_mgr requestAlwaysAuthorization];
             break;
     }
@@ -237,9 +241,11 @@ typedef NS_ENUM(NSUInteger, EPLocationType) {
 }
 
 + (void)authorizationRequestContactsWithHandler:(void (^)(EasyPermissionAuthorizationStatus))handler {
-    [[[CNContactStore alloc] init] requestAccessForEntityType:(CNEntityTypeContacts) completionHandler:^(BOOL granted, NSError * _Nullable error) {
-        handler(granted ? EasyPermissionAuthorizationStatusAuthorized : EasyPermissionAuthorizationStatusDenied);
-    }];
+    if (@available(iOS 9.0, *)) {
+        [[[CNContactStore alloc] init] requestAccessForEntityType:(CNEntityTypeContacts) completionHandler:^(BOOL granted, NSError * _Nullable error) {
+            handler(granted ? EasyPermissionAuthorizationStatusAuthorized : EasyPermissionAuthorizationStatusDenied);
+        }];
+    }
 }
 
 + (void)authorizationRequestRemindersWithHandler:(void (^)(EasyPermissionAuthorizationStatus))handler {
@@ -255,66 +261,78 @@ typedef NS_ENUM(NSUInteger, EPLocationType) {
 }
 
 + (void)authorizationRequestSiriWithHandler:(void (^)(EasyPermissionAuthorizationStatus))handler {
-    [INPreferences requestSiriAuthorization:^(INSiriAuthorizationStatus status) {
-        switch (status) {
-            case INSiriAuthorizationStatusNotDetermined:
-                handler(EasyPermissionAuthorizationStatusNotDetermined);
-                break;
-            case INSiriAuthorizationStatusRestricted:
-                handler(EasyPermissionAuthorizationStatusRestricted);
-                break;
-            case INSiriAuthorizationStatusDenied:
-                handler(EasyPermissionAuthorizationStatusDenied);
-                break;
-            case INSiriAuthorizationStatusAuthorized:
-                handler(EasyPermissionAuthorizationStatusAuthorized);
-                break;
-            default:
-                break;
-        }
-    }];
+    if (@available(iOS 10.0, *)) {
+        [INPreferences requestSiriAuthorization:^(INSiriAuthorizationStatus status) {
+            switch (status) {
+                case INSiriAuthorizationStatusNotDetermined:
+                    handler(EasyPermissionAuthorizationStatusNotDetermined);
+                    break;
+                case INSiriAuthorizationStatusRestricted:
+                    handler(EasyPermissionAuthorizationStatusRestricted);
+                    break;
+                case INSiriAuthorizationStatusDenied:
+                    handler(EasyPermissionAuthorizationStatusDenied);
+                    break;
+                case INSiriAuthorizationStatusAuthorized:
+                    handler(EasyPermissionAuthorizationStatusAuthorized);
+                    break;
+                default:
+                    break;
+            }
+        }];
+    } else {
+        // Fallback on earlier versions
+    }
 }
 
 + (void)authorizationRequestSpeechRecognitionWithHandler:(void (^)(EasyPermissionAuthorizationStatus))handler {
-    [SFSpeechRecognizer requestAuthorization:^(SFSpeechRecognizerAuthorizationStatus status) {
-        switch (status) {
-            case SFSpeechRecognizerAuthorizationStatusNotDetermined:
-                handler(EasyPermissionAuthorizationStatusNotDetermined);
-                break;
-            case SFSpeechRecognizerAuthorizationStatusRestricted:
-                handler(EasyPermissionAuthorizationStatusRestricted);
-                break;
-            case SFSpeechRecognizerAuthorizationStatusDenied:
-                handler(EasyPermissionAuthorizationStatusDenied);
-                break;
-            case SFSpeechRecognizerAuthorizationStatusAuthorized:
-                handler(EasyPermissionAuthorizationStatusAuthorized);
-                break;
-            default:
-                break;
-        }
-    }];
+    if (@available(iOS 10.0, *)) {
+        [SFSpeechRecognizer requestAuthorization:^(SFSpeechRecognizerAuthorizationStatus status) {
+            switch (status) {
+                case SFSpeechRecognizerAuthorizationStatusNotDetermined:
+                    handler(EasyPermissionAuthorizationStatusNotDetermined);
+                    break;
+                case SFSpeechRecognizerAuthorizationStatusRestricted:
+                    handler(EasyPermissionAuthorizationStatusRestricted);
+                    break;
+                case SFSpeechRecognizerAuthorizationStatusDenied:
+                    handler(EasyPermissionAuthorizationStatusDenied);
+                    break;
+                case SFSpeechRecognizerAuthorizationStatusAuthorized:
+                    handler(EasyPermissionAuthorizationStatusAuthorized);
+                    break;
+                default:
+                    break;
+            }
+        }];
+    } else {
+        // Fallback on earlier versions
+    }
 }
 
 + (void)authorizationRequestMusicWithHandler:(void (^)(EasyPermissionAuthorizationStatus))handler {
-    [MPMediaLibrary requestAuthorization:^(MPMediaLibraryAuthorizationStatus status) {
-        switch (status) {
-            case MPMediaLibraryAuthorizationStatusNotDetermined:
-                handler(EasyPermissionAuthorizationStatusNotDetermined);
-                break;
-            case MPMediaLibraryAuthorizationStatusRestricted:
-                handler(EasyPermissionAuthorizationStatusRestricted);
-                break;
-            case MPMediaLibraryAuthorizationStatusDenied:
-                handler(EasyPermissionAuthorizationStatusDenied);
-                break;
-            case MPMediaLibraryAuthorizationStatusAuthorized:
-                handler(EasyPermissionAuthorizationStatusAuthorized);
-                break;
-            default:
-                break;
-        }
-    }];
+    if (@available(iOS 9.3, *)) {
+        [MPMediaLibrary requestAuthorization:^(MPMediaLibraryAuthorizationStatus status) {
+            switch (status) {
+                case MPMediaLibraryAuthorizationStatusNotDetermined:
+                    handler(EasyPermissionAuthorizationStatusNotDetermined);
+                    break;
+                case MPMediaLibraryAuthorizationStatusRestricted:
+                    handler(EasyPermissionAuthorizationStatusRestricted);
+                    break;
+                case MPMediaLibraryAuthorizationStatusDenied:
+                    handler(EasyPermissionAuthorizationStatusDenied);
+                    break;
+                case MPMediaLibraryAuthorizationStatusAuthorized:
+                    handler(EasyPermissionAuthorizationStatusAuthorized);
+                    break;
+                default:
+                    break;
+            }
+        }];
+    } else {
+        // Fallback on earlier versions
+    }
 }
 
 + (void)authorizationRequestMotionWithHandler:(void (^)(EasyPermissionAuthorizationStatus))handler {
@@ -464,16 +482,21 @@ typedef NS_ENUM(NSUInteger, EPLocationType) {
 }
 
 + (EasyPermissionAuthorizationStatus)getContactsAuthorizationStatus {
-    CNAuthorizationStatus status = [CNContactStore authorizationStatusForEntityType:(CNEntityTypeContacts)];
-    switch (status) {
-        case CNAuthorizationStatusNotDetermined:
-            return EasyPermissionAuthorizationStatusNotDetermined;
-        case CNAuthorizationStatusRestricted:
-            return EasyPermissionAuthorizationStatusRestricted;
-        case CNAuthorizationStatusDenied:
-            return EasyPermissionAuthorizationStatusDenied;
-        case CNAuthorizationStatusAuthorized:
-            return EasyPermissionAuthorizationStatusAuthorized;
+    if (@available(iOS 9.0, *)) {
+        CNAuthorizationStatus status = [CNContactStore authorizationStatusForEntityType:(CNEntityTypeContacts)];
+        switch (status) {
+            case CNAuthorizationStatusNotDetermined:
+                return EasyPermissionAuthorizationStatusNotDetermined;
+            case CNAuthorizationStatusRestricted:
+                return EasyPermissionAuthorizationStatusRestricted;
+            case CNAuthorizationStatusDenied:
+                return EasyPermissionAuthorizationStatusDenied;
+            case CNAuthorizationStatusAuthorized:
+                return EasyPermissionAuthorizationStatusAuthorized;
+        }
+    } else {
+        NSAssert(NO, @"available (iOS 9.0, *)");
+        return EasyPermissionAuthorizationStatusNotDetermined;
     }
 }
 
@@ -506,58 +529,78 @@ typedef NS_ENUM(NSUInteger, EPLocationType) {
 }
 
 + (EasyPermissionAuthorizationStatus)getSiriAuthorizationStatus {
-    INSiriAuthorizationStatus status = [INPreferences siriAuthorizationStatus];
-    switch (status) {
-        case INSiriAuthorizationStatusNotDetermined:
-            return EasyPermissionAuthorizationStatusNotDetermined;
-        case INSiriAuthorizationStatusRestricted:
-            return EasyPermissionAuthorizationStatusRestricted;
-        case INSiriAuthorizationStatusDenied:
-            return EasyPermissionAuthorizationStatusDenied;
-        case INSiriAuthorizationStatusAuthorized:
-            return EasyPermissionAuthorizationStatusAuthorized;
+    if (@available(iOS 10.0, *)) {
+        INSiriAuthorizationStatus status = [INPreferences siriAuthorizationStatus];
+        switch (status) {
+            case INSiriAuthorizationStatusNotDetermined:
+                return EasyPermissionAuthorizationStatusNotDetermined;
+            case INSiriAuthorizationStatusRestricted:
+                return EasyPermissionAuthorizationStatusRestricted;
+            case INSiriAuthorizationStatusDenied:
+                return EasyPermissionAuthorizationStatusDenied;
+            case INSiriAuthorizationStatusAuthorized:
+                return EasyPermissionAuthorizationStatusAuthorized;
+        }
+    } else {
+        NSAssert(NO, @"available (iOS 10.0, *)");
+        return EasyPermissionAuthorizationStatusNotDetermined;
     }
 }
 
 + (EasyPermissionAuthorizationStatus)getSpeechRecognitionAuthorizationStatus {
-    SFSpeechRecognizerAuthorizationStatus status = [SFSpeechRecognizer authorizationStatus];
-    switch (status) {
-        case SFSpeechRecognizerAuthorizationStatusNotDetermined:
-            return EasyPermissionAuthorizationStatusNotDetermined;
-        case SFSpeechRecognizerAuthorizationStatusRestricted:
-            return EasyPermissionAuthorizationStatusRestricted;
-        case SFSpeechRecognizerAuthorizationStatusDenied:
-            return EasyPermissionAuthorizationStatusDenied;
-        case SFSpeechRecognizerAuthorizationStatusAuthorized:
-            return EasyPermissionAuthorizationStatusAuthorized;
+    if (@available(iOS 10.0, *)) {
+        SFSpeechRecognizerAuthorizationStatus status = [SFSpeechRecognizer authorizationStatus];
+        switch (status) {
+            case SFSpeechRecognizerAuthorizationStatusNotDetermined:
+                return EasyPermissionAuthorizationStatusNotDetermined;
+            case SFSpeechRecognizerAuthorizationStatusRestricted:
+                return EasyPermissionAuthorizationStatusRestricted;
+            case SFSpeechRecognizerAuthorizationStatusDenied:
+                return EasyPermissionAuthorizationStatusDenied;
+            case SFSpeechRecognizerAuthorizationStatusAuthorized:
+                return EasyPermissionAuthorizationStatusAuthorized;
+        }
+    } else {
+        NSAssert(NO, @"available (iOS 10.0, *)");
+        return EasyPermissionAuthorizationStatusNotDetermined;
     }
 }
 
 + (EasyPermissionAuthorizationStatus)getMusicAuthorizationStatus {
-    MPMediaLibraryAuthorizationStatus status = [MPMediaLibrary authorizationStatus];
-    switch (status) {
-        case MPMediaLibraryAuthorizationStatusNotDetermined:
-            return EasyPermissionAuthorizationStatusNotDetermined;
-        case MPMediaLibraryAuthorizationStatusRestricted:
-            return EasyPermissionAuthorizationStatusRestricted;
-        case MPMediaLibraryAuthorizationStatusDenied:
-            return EasyPermissionAuthorizationStatusDenied;
-        case MPMediaLibraryAuthorizationStatusAuthorized:
-            return EasyPermissionAuthorizationStatusAuthorized;
+    if (@available(iOS 9.3, *)) {
+        MPMediaLibraryAuthorizationStatus status = [MPMediaLibrary authorizationStatus];
+        switch (status) {
+            case MPMediaLibraryAuthorizationStatusNotDetermined:
+                return EasyPermissionAuthorizationStatusNotDetermined;
+            case MPMediaLibraryAuthorizationStatusRestricted:
+                return EasyPermissionAuthorizationStatusRestricted;
+            case MPMediaLibraryAuthorizationStatusDenied:
+                return EasyPermissionAuthorizationStatusDenied;
+            case MPMediaLibraryAuthorizationStatusAuthorized:
+                return EasyPermissionAuthorizationStatusAuthorized;
+        }
+    } else {
+        NSAssert(NO, @"available (iOS 9.3, *)");
+        return EasyPermissionAuthorizationStatusNotDetermined;
     }
 }
 
 + (EasyPermissionAuthorizationStatus)getMotionAuthorizationStatus {
-    CMAuthorizationStatus status = [CMAltimeter authorizationStatus];
-    switch (status) {
-        case CMAuthorizationStatusNotDetermined:
-            return EasyPermissionAuthorizationStatusNotDetermined;
-        case CMAuthorizationStatusRestricted:
-            return EasyPermissionAuthorizationStatusRestricted;
-        case CMAuthorizationStatusDenied:
-            return EasyPermissionAuthorizationStatusDenied;
-        case CMAuthorizationStatusAuthorized:
-            return EasyPermissionAuthorizationStatusAuthorized;
+    if (@available(iOS 11.0, *)) {
+        CMAuthorizationStatus status = [CMAltimeter authorizationStatus];
+        switch (status) {
+            case CMAuthorizationStatusNotDetermined:
+                return EasyPermissionAuthorizationStatusNotDetermined;
+            case CMAuthorizationStatusRestricted:
+                return EasyPermissionAuthorizationStatusRestricted;
+            case CMAuthorizationStatusDenied:
+                return EasyPermissionAuthorizationStatusDenied;
+            case CMAuthorizationStatusAuthorized:
+                return EasyPermissionAuthorizationStatusAuthorized;
+        }
+    } else {
+        NSAssert(NO, @"available (iOS 11.0, *)");
+        return EasyPermissionAuthorizationStatusNotDetermined;
     }
 }
 

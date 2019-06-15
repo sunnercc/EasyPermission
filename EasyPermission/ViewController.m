@@ -22,6 +22,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     _datas = @[@"camera", @"photoLibrary", @"microphone", @"locationAlways", @"locationWhenInUse", @"locationAlwaysAndWhenInUse", @"contacts", @"reminders", @"calendars", @"siri", @"speechRecognition", @"music", @"motion", @"bluetooth"];
+    
     _privacyTypes = @[@(EasyPermissionPrivacyTypeCamera), @(EasyPermissionPrivacyTypePhotoLibrary), @(EasyPermissionPrivacyTypeMicrophone), @(EasyPermissionPrivacyTypeLocationAlways), @(EasyPermissionPrivacyTypeLocationWhenInUse), @(EasyPermissionPrivacyTypeLocationAlwaysAndWhenInUse), @(EasyPermissionPrivacyTypeContacts), @(EasyPermissionPrivacyTypeReminders), @(EasyPermissionPrivacyTypeCalendars), @(EasyPermissionPrivacyTypeSiri), @(EasyPermissionPrivacyTypeSpeechRecognition), @(EasyPermissionPrivacyTypeMusic), @(EasyPermissionPrivacyTypeMotion), @(EasyPermissionPrivacyTypeBluetooth)];
     
     [_permissionTableView registerNib:[UINib nibWithNibName:NSStringFromClass([PermissionCell class]) bundle:nil] forCellReuseIdentifier:permissionReuseID];
