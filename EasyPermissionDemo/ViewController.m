@@ -8,7 +8,7 @@
 
 #import "ViewController.h"
 #import "PermissionCell.h"
-#import "EasyPermission/EasyPermission.h"
+#import "../EasyPermission/EasyPermission.h"
 #define permissionReuseID @"permissionReuseID"
 @interface ViewController () <UITableViewDelegate, UITableViewDataSource, PermissionCellDelegate>
 @property (weak, nonatomic) IBOutlet UITableView *permissionTableView;

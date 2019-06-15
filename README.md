@@ -2,6 +2,11 @@ an easy way to request authorization for iOS platform.
 
 ![demo](https://github.com/sunnercc/EasyPermission/blob/master/easyPermission.gif)
 
+## Cocoapods
+```
+pod 'EasyPermission'
+```
+
 ## supported permission privacy type
 ``` objc 
 typedef NS_ENUM(NSUInteger, EasyPermissionPrivacyType) {
