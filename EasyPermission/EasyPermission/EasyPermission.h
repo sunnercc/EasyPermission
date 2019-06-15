@@ -1,9 +1,15 @@
-an easy way to request authorization for iOS platform.
+//
+//  EasyPermission.h
+//  EasyPermission
+//
+//  Created by 陈晨晖 on 2019/6/13.
+//  Copyright © 2019 sunner. All rights reserved.
+//
 
-![demo](https://easyPermission.gif)
+#import <Foundation/Foundation.h>
 
-## supported permission privacy type
-``` objc 
+NS_ASSUME_NONNULL_BEGIN
+
 typedef NS_ENUM(NSUInteger, EasyPermissionPrivacyType) {
     EasyPermissionPrivacyTypeCamera,
     EasyPermissionPrivacyTypePhotoLibrary,
@@ -20,22 +26,20 @@ typedef NS_ENUM(NSUInteger, EasyPermissionPrivacyType) {
     EasyPermissionPrivacyTypeMotion,
     EasyPermissionPrivacyTypeBluetooth
 };
-```
 
-## supported authorization status
-``` objc 
 typedef NS_ENUM(NSUInteger, EasyPermissionAuthorizationStatus) {
     EasyPermissionAuthorizationStatusNotDetermined,
     EasyPermissionAuthorizationStatusRestricted,
     EasyPermissionAuthorizationStatusDenied,
     EasyPermissionAuthorizationStatusAuthorized
 };
-```
 
-## use methods
-``` objc 
-+ (void)authorizationRequestWithPrivacyType:(EasyPermissionPrivacyType)privacyType handler:(void (^)(EasyPermissionAuthorizationStatus status))handler;
+@interface EasyPermission : NSObject
 
-+ (EasyPermissionAuthorizationStatus)getAuthorizationStatusWithPrivacyType:(EasyPermissionPrivacyType)privacyType;
++ (void)authorizationRequestWithPrivacyType:(EasyPermissionPrivacyType)privacyType completionHandler:(void (^)(EasyPermissionAuthorizationStatus status))handler;
 
-```
++ (EasyPermissionAuthorizationStatus)getAuthorizationStatusWithPrivacyType:(EasyPermissionPrivacyType)type;
+
+@end
+
+NS_ASSUME_NONNULL_END
