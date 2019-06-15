@@ -1,6 +1,6 @@
 an easy way to request authorization for iOS platform.
 
-![demo](https://easyPermission.gif)
+![demo](https://github.com/sunnercc/EasyPermission/blob/master/easyPermission.gif)
 
 ## supported permission privacy type
 ``` objc 
